@@ -1,0 +1,24 @@
+
+spring:
+  application:
+    name: Springboot_Layer
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/online_purchase?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.example.onaffair.entity
+
+#logging:
+#  level:
+#    root: INFO
+#    com.example.onaffair.mapper: DEBUG
+server:
+  port: 721

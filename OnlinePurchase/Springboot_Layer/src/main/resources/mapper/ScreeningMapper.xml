@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.ScreeningMapper">
+    <resultMap id="ScreeningResultMap" type="com.example.onaffair.entity.Screening">
+        <id column="screening_id" property="screeningId"/>
+        <result column="movie_id" property="movieId"/>
+        <result column="room_id" property="roomId"/>
+        <result column="screening_time" property="screeningTime"/>
+        <result column="price" property="price"/>
+    </resultMap>
+    <insert id="insert">
+        insert into screening(movie_id, room_id, screening_time, price)
+        values(#{movieId}, #{roomId}, #{screeningTime}, #{price})
+    </insert>
+    <update id="update">
+        update screening set
+                             movie_id=#{movieId},
+                             room_id=#{roomId},
+                             screening_time=#{screeningTime},
+                             price=#{price}
+        where screening_id=#{screeningId}
+    </update>
+    <delete id="delete">
+        delete from screening where screening_id=#{screeningId}
+    </delete>
+    <select id="getAll" resultMap="ScreeningResultMap">
+        select * from screening
+    </select>
+    <select id="selectByIf" resultMap="ScreeningResultMap">
+        select * from screening
+        <where>
+            <if test="screeningId!=null">
+                screening_id=#{screeningId}
+            </if>
+            <if test="roomId!=null">
+                and room_id=#{roomId}
+            </if>
+            <if test="movieId!=null">
+                and movie_id=#{movieId}
+            </if>
+        </where>
+        order by screening_time
+    </select>
+
+
+</mapper>

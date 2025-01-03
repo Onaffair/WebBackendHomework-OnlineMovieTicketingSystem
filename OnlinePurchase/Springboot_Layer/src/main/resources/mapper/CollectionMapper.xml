@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.CollectionMapper">
+    <resultMap id="CollectionResultMap" type="com.example.onaffair.entity.Collection">
+        <id column="user_id" property="userId"/>
+        <id column="movie_id" property="movieId"/>
+        <result column="collection_date" property="collectionDate"/>
+    </resultMap>
+    <insert id="insert">
+        insert into collection(user_id, movie_id, collection_date)
+        values(#{userId}, #{movieId}, #{collectionDate})
+    </insert>
+    <update id="update">
+        update collection set collection_date=#{collectionDate}
+        where user_id=#{userId} and movie_id=#{movieId}
+    </update>
+    <delete id="delete">
+        delete from collection where user_id=#{userId} and movie_id=#{movieId}
+    </delete>
+    <select id="getAll" resultMap="CollectionResultMap">
+        select * from collection
+    </select>
+    <select id="selectByIf" resultMap="CollectionResultMap">
+        select * from collection
+        <where>
+            <if test="userId!=null">
+                user_id=#{userId}
+            </if>
+            <if test="movieId!=null">
+                and movie_id=#{movieId}
+            </if>
+        </where>
+    </select>
+    <select id="selectById" resultType="com.example.onaffair.entity.Collection">
+        select * from collection where user_id=#{userId} and movie_id=#{movieId}
+    </select>
+    <select id="getCollectionByMovieIdList" resultType="com.example.onaffair.dto.CollectionResponseDto">
+        SELECT
+        m.movie_id AS movieId,
+        m.title AS movieName,
+        m.rating AS rating,
+        m.poster_url AS posterUrl,
+        m.collection_count AS collectionCount
+        FROM
+        movie m
+        WHERE
+        m.movie_id IN
+        <foreach collection="movieIdList" item="movieId" open="(" separator="," close=")">
+            #{movieId}
+        </foreach>
+    </select>
+
+
+
+</mapper>

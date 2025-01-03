@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.PaymentMapper">
+    <resultMap id="PaymentResultMap" type="com.example.onaffair.entity.Payment">
+        <id column="payment_id" property="paymentId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="amount" property="amount"/>
+        <result column="payment_method" property="paymentMethod"/>
+        <result column="payment_status" property="paymentStatus"/>
+    </resultMap>
+    <insert id="insert">
+        insert into payment(order_id, payment_time, amount, payment_method, payment_status)
+        values(#{orderId}, #{paymentTime}, #{amount}, #{paymentMethod}, #{paymentStatus})
+    </insert>
+    <update id="update">
+        update payment set
+                           order_id=#{orderId},
+                           payment_time=#{paymentTime},
+                           amount=#{amount},
+                           payment_method=#{paymentMethod},
+                           payment_status=#{paymentStatus}
+        where payment_id=#{paymentId}
+    </update>
+    <delete id="delete">
+        delete from payment where payment_id=#{paymentId}
+    </delete>
+    <select id="getAll" resultMap="PaymentResultMap">
+        select * from payment
+    </select>
+    <select id="selectByIf" resultMap="PaymentResultMap">
+        select * from payment
+        <where>
+            <if test="paymentId!=null">
+                payment_id=#{paymentId}
+            </if>
+            <if test="orderId!=null">
+                and order_id=#{orderId}
+            </if>
+        </where>
+    </select>
+</mapper>

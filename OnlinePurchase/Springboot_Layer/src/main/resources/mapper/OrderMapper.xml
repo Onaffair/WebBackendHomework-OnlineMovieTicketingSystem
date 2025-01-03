@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.OrderMapper">
+    <resultMap id="OrderResultMap" type="com.example.onaffair.entity.Order">
+        <id column="order_id" property="orderId"/>
+        <result column="user_id" property="userId"/>
+        <result column="screening_id" property="screeningId"/>
+        <result column="seat_id" property="seatId"/>
+    </resultMap>
+    <insert id="insert">
+        insert into `order`(user_id,  screening_id, seat_id)
+        values(#{userId}, #{screeningId}, #{seatId})
+    </insert>
+    <update id="update">
+        update `order` set
+                           user_id=#{userId},
+                           screening_id=#{screeningId},
+                           seat_id = #{seatId}
+        where order_id=#{orderId}
+    </update>
+    <delete id="delete">
+        delete from `order` where order_id=#{orderId}
+    </delete>
+    <select id="getAll" resultMap="OrderResultMap">
+        select * from `order`
+    </select>
+    <select id="selectByIf" resultMap="OrderResultMap">
+        select * from `order`
+        <where>
+            <if test="orderId!=null">
+                order_id=#{orderId}
+            </if>
+            <if test="userId!=null">
+                and user_id=#{userId}
+            </if>
+            <if test="screeningId!=null">
+                and screening_id=#{screeningId}
+            </if>
+            <if test="seatId!=null">
+                and seat_id=#{seatId}
+            </if>
+        </where>
+    </select>
+    <select id="getOrderList" resultType="com.example.onaffair.dto.OrderResponseDto">
+        SELECT
+        o.order_id AS orderId,
+        c.name AS cinemaName,
+        m.title AS movieName,
+        s.price AS price,
+        sr.room_number AS roomNumber,
+        o.seat_id AS seatId,
+        s.screening_time AS screeningTime
+        FROM
+        `order` o
+        LEFT JOIN screening s ON o.screening_id = s.screening_id
+        LEFT JOIN screeningroom sr ON s.room_id = sr.room_id
+        LEFT JOIN cinema c ON sr.cinema_id = c.cinema_id
+        LEFT JOIN movie m ON s.movie_id = m.movie_id
+        WHERE
+        o.order_id IN
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

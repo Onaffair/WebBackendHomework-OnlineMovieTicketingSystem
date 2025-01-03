@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.CinemaMapper">
+    <!-- 映射Cinema对象 -->
+    <resultMap id="CinemaResultMap" type="com.example.onaffair.entity.Cinema">
+        <id column="cinema_id" property="cinemaId"/>
+        <result column="name" property="name"/>
+        <result column="location" property="location"/>
+        <result column="contact_number" property="contactNumber"/>
+    </resultMap>
+
+    <!-- 其他基本增删改查操作 -->
+    <insert id="insert">
+        INSERT INTO cinema(name, location, contact_number)
+        VALUES(#{name}, #{location}, #{contactNumber})
+    </insert>
+    <update id="update">
+        UPDATE cinema SET name=#{name}, location=#{location}, contact_number=#{contactNumber}
+        WHERE cinema_id=#{cinemaId}
+    </update>
+    <delete id="delete">
+        DELETE FROM cinema WHERE cinema_id=#{cinemaId}
+    </delete>
+    <select id="getAll" resultMap="CinemaResultMap">
+        SELECT * FROM cinema
+    </select>
+    <select id="selectByIf" resultMap="CinemaResultMap">
+        SELECT * FROM cinema
+        <where>
+            <if test="cinemaId != null">
+                AND cinema_id=#{cinemaId}
+            </if>
+            <if test="name != null">
+                AND name=#{name}
+            </if>
+            <if test="location != null">
+                AND location=#{location}
+            </if>
+        </where>
+    </select>
+    <select id="selectByPage" resultType="com.example.onaffair.entity.Cinema">
+        SELECT * FROM cinema c
+        <where>
+            <!-- 按照品牌进行模糊搜索 -->
+            <if test="dto.brand != null and dto.brand != '全部'">
+                AND c.name LIKE CONCAT('%', #{dto.brand}, '%')
+            </if>
+
+            <if test="dto.movieId != null">
+                AND EXISTS (
+                    SELECT 1
+                    FROM screeningroom sr
+                    WHERE sr.cinema_id = c.cinema_id
+                    AND EXISTS (
+                        SELECT 1
+                        FROM screening s
+                        WHERE s.room_id = sr.room_id
+                        AND s.movie_id = #{dto.movieId}
+                    )
+                )
+            </if>
+        </where>
+
+    </select>
+
+
+</mapper>

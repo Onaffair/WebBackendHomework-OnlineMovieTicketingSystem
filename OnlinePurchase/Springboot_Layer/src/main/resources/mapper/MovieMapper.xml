@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.MovieMapper">
+    <resultMap id="MovieResultMap" type="com.example.onaffair.entity.Movie">
+        <id column="movie_id" property="movieId"/>
+        <result column="title" property="title"/>
+        <result column="synopsis" property="synopsis"/>
+        <result column="release_date" property="releaseDate"/>
+        <result column="director" property="director"/>
+        <result column="rating" property="rating"/>
+        <result column="poster_url" property="posterUrl"/>
+        <result column="production_region" property="productionRegion"/>
+        <result column="tags" property="tags"/>
+        <result column="collection_count" property="collectionCount"/>
+    </resultMap>
+    <update id="update">
+        update movie set
+                         title=#{title},
+                         synopsis=#{synopsis},
+                         release_date=#{releaseDate},
+                         director=#{director},
+                         rating=#{rating},
+                         poster_url=#{posterUrl},
+                         production_region=#{productionRegion},
+                         tags=#{tags},
+                         collection_count=#{collectionCount}
+        where movie_id=#{movieId}
+    </update>
+    <delete id="delete">
+        delete from movie where movie_id=#{movieId}
+    </delete>
+    <select id="getAll" resultMap="MovieResultMap">
+        select * from movie
+    </select>
+    <select id="selectByIf" resultMap="MovieResultMap">
+        select * from movie
+        <where>
+            <if test="movieId!=null">
+                movie_id=#{movieId}
+            </if>
+            <if test="title!=null">
+                and title=#{title}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByPage" resultType="com.example.onaffair.entity.Movie">
+        select m.* from movie m
+        <where>
+            <if test="dto.bar != null and dto.bar == 'hotScreening'">
+                and exists (
+                select 1
+                from screening s
+                where s.movie_id = m.movie_id
+                )
+            </if>
+            <if test="dto.bar != null and dto.bar == 'upComing'">
+                and m.release_date >= current_date()
+                and m.release_date != '2049-10-01'
+            </if>
+            <if test="dto.type != null">
+                and m.tags like concat('%',#{dto.type},'%')
+            </if>
+            <if test="dto.region != null">
+                and m.production_region like concat('%',#{dto.region},'%')
+            </if>
+            <if test="dto.year != null and dto.year != '更早'">
+                and year(m.release_date) = #{dto.year}
+            </if>
+            <if test="dto.year != null and dto.year == '更早'">
+                and (YEAR(CURRENT_DATE()) - 13) >= year(m.release_date)
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

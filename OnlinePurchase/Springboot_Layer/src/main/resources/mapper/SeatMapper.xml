@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.SeatMapper">
+    <resultMap id="SeatResultMap" type="com.example.onaffair.entity.Seat">
+        <id column="seat_id" property="seatId"/>
+        <result column="screening_id" property="screeningId"/>
+
+    </resultMap>
+    <insert id="insert">
+        insert into seat(seat_id,screening_id) values(#{seatId},#{screeningId})
+    </insert>
+    <update id="update">
+        update seat set screening_id=#{screeningId} where seat_id=#{seatId}
+    </update>
+    <delete id="delete">
+        delete from seat where seat_id=#{seatId} and screening_id=#{screeningId}
+    </delete>
+    <select id="getAll" resultType="com.example.onaffair.entity.Seat">
+        select * from seat
+    </select>
+    <select id="selectByIf" resultType="com.example.onaffair.entity.Seat">
+        select * from seat
+        <where>
+            <if test="seatId != null">
+                and seat_id=#{seatId}
+            </if>
+            <if test="screeningId != null">
+                and screening_id=#{screeningId}
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

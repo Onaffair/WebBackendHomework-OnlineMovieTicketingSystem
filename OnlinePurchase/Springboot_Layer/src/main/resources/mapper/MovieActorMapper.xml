@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.onaffair.mapper.MovieActorMapper">
+    <resultMap id="MovieActorResultMap" type="com.example.onaffair.entity.MovieActor">
+        <id column="movie_id" property="movieId"/>
+        <id column="actor_id" property="actorId"/>
+        <result column="role" property="role"/>
+    </resultMap>
+    <insert id="insert">
+        insert into movie_actor(movie_id, actor_id, role)
+        values(#{movieId}, #{actorId}, #{role})
+    </insert>
+    <update id="update">
+        update movie_actor set role=#{role}
+        where movie_id=#{movieId} and actor_id=#{actorId}
+    </update>
+    <delete id="delete">
+        delete from movie_actor where movie_id=#{movieId} and actor_id=#{actorId}
+    </delete>
+    <select id="getAll" resultMap="MovieActorResultMap">
+        select * from movie_actor
+    </select>
+    <select id="selectByIf" resultMap="MovieActorResultMap">
+        select * from movie_actor
+        <where>
+            <if test="movieId!=null">
+                and movie_id=#{movieId}
+            </if>
+            <if test="actorId!=null">
+                and actor_id=#{actorId}
+            </if>
+        </where>
+    </select>
+</mapper>
