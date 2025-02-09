@@ -10,6 +10,7 @@ import com.example.onaffair.service.MovieActorService;
 import com.example.onaffair.service.MovieService;
 import com.example.onaffair.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/movie")
+@Transactional
 public class MovieController {
     @Autowired
     private MovieService movieService;

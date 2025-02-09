@@ -15,6 +15,7 @@ import com.example.onaffair.service.ScreeningService;
 import com.example.onaffair.utils.Result;
 import com.example.onaffair.utils.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/cinema")
+@Transactional
 public class CinemaController {
 
     @Autowired

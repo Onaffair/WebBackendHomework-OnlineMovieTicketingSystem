@@ -10,6 +10,7 @@ import com.example.onaffair.utils.Result;
 import com.example.onaffair.utils.ResultCode;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/order")
+@Transactional
 public class OrderController {
 
     @Autowired

@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Param;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
+@Transactional
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
